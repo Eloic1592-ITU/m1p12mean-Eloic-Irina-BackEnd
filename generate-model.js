@@ -110,7 +110,7 @@ if (fs.existsSync(serverPath)) {
     // Trouve la ligne `app.listen` et ajoute la nouvelle route avant
     const updatedServerContent = serverContent.replace(
       /app\.listen\(.*\);/, // Trouve la ligne `app.listen`
-      `app.use('/${modelName.toLowerCase()}', require('./routes/${modelName.toLowerCase()}Routes'));\napp.listen(PORT, () => console.log(\`Serveur démarré sur le port \${PORT}\`));`
+      `app.use('/${modelName.toLowerCase()}s', require('./routes/${modelName.toLowerCase()}Routes'));\napp.listen(PORT, () => console.log(\`Serveur démarré sur le port \${PORT}\`));`
     );
 
     // Écrit le fichier server.js mis à jour
