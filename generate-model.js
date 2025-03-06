@@ -58,6 +58,44 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Trouver un ${modelName}
+router.get('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    // Vérifier si l'ID est valide
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
+    // Convertir l'ID en ObjectId et rechercher l'élément
+    const ${modelName.toLowerCase()} = await ${modelName}.findById(id);
+
+    // Si l'élément n'est pas trouvé, renvoyer une erreur 404
+    if (!${modelName.toLowerCase()}) {
+      return res.status(404).json({ message: '${modelName} not found' });
+    }
+    // Renvoyer l'élément trouvé
+    res.json(${modelName.toLowerCase()});
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Rechercher un ou plusieurs ${modelName}(s)
+router.get('/search', async (req, res) => {
+  try {
+    const query = {};
+    // Ajouter des critères de recherche dynamiques
+    for (const [key, value] of Object.entries(req.query)) {
+      query[key] = value;
+    }
+
+    const ${modelName.toLowerCase()}s = await ${modelName}.find(query);
+    res.json(${modelName.toLowerCase()}s);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Mettre à jour un ${modelName}
 router.put('/:id', async (req, res) => {
   try {
