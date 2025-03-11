@@ -80,21 +80,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Rechercher un ou plusieurs ${modelName}(s)
-router.get('/search', async (req, res) => {
-  try {
-    const query = {};
-    // Ajouter des critères de recherche dynamiques
-    for (const [key, value] of Object.entries(req.query)) {
-      query[key] = value;
-    }
-
-    const ${modelName.toLowerCase()}s = await ${modelName}.find(query);
-    res.json(${modelName.toLowerCase()}s);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
 
 // Mettre à jour un ${modelName}
 router.put('/:id', async (req, res) => {
