@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Test = require('../models/Test');
 
@@ -17,6 +18,54 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const tests = await Test.find();
+    res.json(tests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Trouver un Test
+router.get('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    // Vérifier si l'ID est valide
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
+    // Convertir l'ID en ObjectId et rechercher l'élément
+    const test = await Test.findById(id);
+
+    // Si l'élément n'est pas trouvé, renvoyer une erreur 404
+    if (!test) {
+      return res.status(404).json({ message: 'Test not found' });
+    }
+    // Renvoyer l'élément trouvé
+    res.json(test);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Rechercher un ou plusieurs Test(s)
+router.get('/search', async (req, res) => {
+  try {
+    const query = {};
+    // Ajouter des critères de recherche dynamiques
+    for (const [key, value] of Object.entries(req.query)) {
+      if (key === '_id') {
+        // Vérifier si l'ID est valide
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return res.status(400).json({ message: 'Invalid ID format' });
+        }
+        // Convertir l'ID en ObjectId
+        query[key] = mongoose.Types.ObjectId(value);
+      } else {
+        // Ajouter d'autres critères de recherche
+        query[key] = value;
+      }
+    }
+
+    const tests = await Test.find(query);
     res.json(tests);
   } catch (error) {
     res.status(500).json({ message: error.message });
