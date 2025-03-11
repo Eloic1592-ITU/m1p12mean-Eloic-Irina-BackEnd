@@ -32,10 +32,18 @@ const startServer = async () => {
 };
 
 // Routes
-app.use('/', require('./routes/testRoutes'));
-app.use('/tests', require('./routes/testRoutes'));
-app.use('/products', require('./routes/productRoutes'));
 app.use('/admin', require('./routes/administrateurRoutes'));
+app.use('/mecanicien', require('./routes/mecanicienRoutes'));
+app.use('/client', require('./routes/clientRoutes'));
+app.use('/service', require('./routes/servicesRoutes'));
+app.use('/facture', require('./routes/factureRoutes'));
+app.use('/rendezvous', require('./routes/rendezvousRoutes'));
+app.use('/demande', require('./routes/demandeRoutes'));
+app.use('/evenement', require('./routes/evenementRoutes'));
+app.use('/promotion', require('./routes/promotionRoutes'));
+pp.use('/vehicule', require('./routes/vehiculeRoutes'));
+pp.use('/maintenance', require('./routes/maintenanceRoutes'));
+
 // Démarrez le serveur
 startServer();
 
