@@ -34,6 +34,7 @@ module.exports = mongoose.model('${modelName}', ${modelName}Schema);
 // Génère le contenu des routes
 const routesContent = `
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const ${modelName} = require('../models/${modelName}');
 
