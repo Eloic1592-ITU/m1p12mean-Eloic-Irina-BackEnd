@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
 });
 
 // Lire tous les Administrateurs
-router.get('/', async (req, res) => {
+router.get('/admin', async (req, res) => {
   try {
     const administrateurs = await Administrateur.find();
     res.json(administrateurs);
@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
 });
 
 // Trouver un Administrateur
-router.get('/:id', async (req, res) => {
+router.get('/admin/:id', async (req, res) => {
   try {
     const id = req.params.id;
     // Vérifier si l'ID est valide
