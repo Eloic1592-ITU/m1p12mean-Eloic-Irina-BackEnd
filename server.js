@@ -32,9 +32,9 @@ const startServer = async () => {
 };
 
 // Routes
-app.use('/', require('./routes/testRoutes'));
+app.use('/tests', require('./routes/testRoutes'));
 app.use('/products', require('./routes/productRoutes'));
-
+app.use('/admin', require('./routes/administrateurRoutes'));
 // Démarrez le serveur
 startServer();
 
