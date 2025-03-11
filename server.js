@@ -30,7 +30,13 @@ const startServer = async () => {
     process.exit(1); // Quitte l'application en cas d'erreur
   }
 };
+
 // Routes
-app.use('/tests', require('./routes/testRoutes'));
+app.use('/', require('./routes/testRoutes'));
 app.use('/products', require('./routes/productRoutes'));
-app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
+
+// Démarrez le serveur
+startServer();
+
+// Exportez l'application Express pour Vercel
+module.exports = app;
