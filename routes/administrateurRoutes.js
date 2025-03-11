@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Administrateur = require('../models/Administrateur');
 
@@ -14,7 +15,7 @@ router.post('/', async (req, res) => {
 });
 
 // Lire tous les Administrateurs
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
   try {
     const administrateurs = await Administrateur.find();
     res.json(administrateurs);
@@ -24,7 +25,7 @@ router.get('/', async (req, res) => {
 });
 
 // Trouver un Administrateur
-router.get('/:id', async (req, res) => {
+router.get('/find/:id', async (req, res) => {
   try {
     const id = req.params.id;
     // Vérifier si l'ID est valide
@@ -47,7 +48,7 @@ router.get('/:id', async (req, res) => {
 
 
 // Mettre à jour un Administrateur
-router.put('/:id', async (req, res) => {
+router.put('/update/:id', async (req, res) => {
   try {
     const administrateur = await Administrateur.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(administrateur);
@@ -57,7 +58,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Supprimer un Administrateur
-router.delete('/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
   try {
     await Administrateur.findByIdAndDelete(req.params.id);
     res.json({ message: "Administrateur supprimé" });

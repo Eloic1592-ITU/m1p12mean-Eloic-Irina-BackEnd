@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
 });
 
 // Lire tous les ${modelName}s
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
   try {
     const ${modelName.toLowerCase()}s = await ${modelName}.find();
     res.json(${modelName.toLowerCase()}s);
@@ -60,7 +60,7 @@ router.get('/', async (req, res) => {
 });
 
 // Trouver un ${modelName}
-router.get('/:id', async (req, res) => {
+router.get('/find/:id', async (req, res) => {
   try {
     const id = req.params.id;
     // Vérifier si l'ID est valide
@@ -83,7 +83,7 @@ router.get('/:id', async (req, res) => {
 
 
 // Mettre à jour un ${modelName}
-router.put('/:id', async (req, res) => {
+router.put('/update/:id', async (req, res) => {
   try {
     const ${modelName.toLowerCase()} = await ${modelName}.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(${modelName.toLowerCase()});
@@ -93,7 +93,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Supprimer un ${modelName}
-router.delete('/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
   try {
     await ${modelName}.findByIdAndDelete(req.params.id);
     res.json({ message: "${modelName} supprimé" });
