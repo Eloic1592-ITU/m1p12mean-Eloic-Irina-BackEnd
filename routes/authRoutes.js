@@ -60,26 +60,27 @@ router.post('/logout', (req, res) => {
 
 // Route d'inscription
 router.post("/register", async (req, res) => {
-  const { nom, email, motdepasse, phone, specialite, role } = req.body;
+  const { nom, datenaissance, contact, email, motdepasse, image, adresse, specialite, role } = req.body;
 
   try {
-    let user;
+    // Vérifier si l'email est déjà utilisé
+    const existingClient = await Client.findOne({ email });
+    const existingMecanicien = await Mecanicien.findOne({ email });
 
-    // Vérifier si l'utilisateur existe déjà
-    const existingUser =
-      (await Client.findOne({ email })) || (await Mecanicien.findOne({ email }));
-    if (existingUser) {
+    if (existingClient || existingMecanicien) {
       return res.status(400).json({ message: "Cet email est déjà utilisé." });
     }
 
+    let user;
+
     // Créer un nouvel utilisateur en fonction du rôle
     if (role === "client") {
-      user = new Client({ nom, email, motdepasse, phone });
+      user = new Client({ nom, datenaissance, contact, email, motdepasse, image });
     } else if (role === "mecanicien") {
-      if (!specialite) {
-        return res.status(400).json({ message: "La spécialité est requise pour les mécaniciens." });
+      if (!adresse || !specialite) {
+        return res.status(400).json({ message: "L'adresse et la spécialité sont requises pour les mécaniciens." });
       }
-      user = new Mecanicien({ nom, email, motdepasse, specialite });
+      user = new Mecanicien({ nom, datenaissance, adresse, contact, email, motdepasse, specialite, image });
     } else {
       return res.status(400).json({ message: "Rôle invalide." });
     }
