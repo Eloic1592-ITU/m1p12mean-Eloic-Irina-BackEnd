@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Désactive le buffering des commandes MongoDB
-mongoose.set('bufferCommands', false);
+mongoose.set('bufferCommands', true);
 
 // Connexion à MongoDB
 const startServer = async () => {
