@@ -58,5 +58,40 @@ router.post('/logout', (req, res) => {
   res.json({ message: "Déconnexion réussie" });
 });
 
+// Route d'inscription
+router.post("/register", async (req, res) => {
+  const { nom, email, motdepasse, phone, specialite, role } = req.body;
+
+  try {
+    let user;
+
+    // Vérifier si l'utilisateur existe déjà
+    const existingUser =
+      (await Client.findOne({ email })) || (await Mecanicien.findOne({ email }));
+    if (existingUser) {
+      return res.status(400).json({ message: "Cet email est déjà utilisé." });
+    }
+
+    // Créer un nouvel utilisateur en fonction du rôle
+    if (role === "client") {
+      user = new Client({ nom, email, motdepasse, phone });
+    } else if (role === "mecanicien") {
+      if (!specialite) {
+        return res.status(400).json({ message: "La spécialité est requise pour les mécaniciens." });
+      }
+      user = new Mecanicien({ nom, email, motdepasse, specialite });
+    } else {
+      return res.status(400).json({ message: "Rôle invalide." });
+    }
+
+    // Sauvegarder l'utilisateur dans la base de données
+    await user.save();
+
+    // Réponse réussie
+    res.status(201).json({ message: "Utilisateur enregistré avec succès.", user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 module.exports = router;
