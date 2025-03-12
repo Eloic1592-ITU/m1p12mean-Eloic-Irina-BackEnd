@@ -41,8 +41,8 @@ app.use('/rendezvous', require('./routes/rendezvousRoutes'));
 app.use('/demande', require('./routes/demandeRoutes'));
 app.use('/evenement', require('./routes/evenementRoutes'));
 app.use('/promotion', require('./routes/promotionRoutes'));
-pp.use('/vehicule', require('./routes/vehiculeRoutes'));
-pp.use('/maintenance', require('./routes/maintenanceRoutes'));
+app.use('/vehicule', require('./routes/vehiculeRoutes'));
+app.use('/maintenance', require('./routes/maintenanceRoutes'));
 
 // Démarrez le serveur
 startServer();
