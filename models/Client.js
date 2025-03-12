@@ -12,4 +12,12 @@ const ClientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Hash du mot de passe avant de sauvegarder
+ClientSchema.pre("save", async function (next) {
+  if (this.isModified("motdepasse")) {
+    this.motdepasse = await bcrypt.hash(this.motdepasse, 10);
+  }
+  next();
+});
+
 module.exports = mongoose.model('Client', ClientSchema);

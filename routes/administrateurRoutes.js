@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Administrateur = require('../models/Administrateur');
+const { json } = require('body-parser');
 
 // Créer un Administrateur
 router.post('/', async (req, res) => {
@@ -66,5 +67,24 @@ router.delete('/delete/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Connexion administrateur
+// router.post('/login', async (req, res) => {
+//   try {
+//     const { email, motdepasse } = req.body;
+//     // Trouver l'administrateur par email
+//     const administrateur = await Administrateur.findOne({ email,motdepasse });
+
+//     // Vérifier si l'administrateur existe
+//     if (!administrateur) {
+//       return res.status(404).json({ message: 'Administrateur non trouvé' });
+//     }
+
+//     // Si tout est valide, renvoyer une réponse réussie
+//     res.json({ message: 'Connexion réussie', administrateur });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
 
 module.exports = router;

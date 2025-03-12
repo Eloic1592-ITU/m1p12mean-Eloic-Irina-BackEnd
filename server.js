@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-
 const app = express();
 
 // Middleware
@@ -12,7 +11,7 @@ app.use(express.json());
 // Désactive le buffering des commandes MongoDB
 mongoose.set('bufferCommands', true);
 
-// Connexion à MongoDB
+// Connexion a MongoDB
 const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
@@ -31,6 +30,7 @@ const startServer = async () => {
   }
 };
 
+
 // Routes
 app.use('/admin', require('./routes/administrateurRoutes'));
 app.use('/mecanicien', require('./routes/mecanicienRoutes'));
@@ -43,8 +43,9 @@ app.use('/evenement', require('./routes/evenementRoutes'));
 app.use('/promotion', require('./routes/promotionRoutes'));
 app.use('/vehicule', require('./routes/vehiculeRoutes'));
 app.use('/maintenance', require('./routes/maintenanceRoutes'));
+app.use('/auth', require('./routes/authRoutes'));
 
-// Démarrez le serveur
+// Connexion a MongoDB
 startServer();
 
 // Exportez l'application Express pour Vercel

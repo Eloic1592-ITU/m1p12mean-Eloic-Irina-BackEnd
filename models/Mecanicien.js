@@ -13,5 +13,12 @@ const MecanicienSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+MecanicienSchema.pre("save", async function (next) {
+  if (this.isModified("motdepasse")) {
+    this.motdepasse = await bcrypt.hash(this.motdepasse, 10);
+  }
+  next();
+});
+
 
 module.exports = mongoose.model('Mecanicien', MecanicienSchema);
