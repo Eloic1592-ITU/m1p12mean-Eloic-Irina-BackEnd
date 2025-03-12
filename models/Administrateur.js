@@ -12,11 +12,11 @@ const AdministrateurSchema = new mongoose.Schema(
 );
 
 // Hash du mot de passe avant de sauvegarder
-AdministrateurSchema.pre("save", async function (next) {
-  if (this.isModified("motdepasse")) {
-    this.motdepasse = await bcrypt.hash(this.motdepasse, 10);
-  }
-  next();
-});
+// AdministrateurSchema.pre("save", async function (next) {
+//   if (this.isModified("motdepasse")) {
+//     this.motdepasse = await bcrypt.hash(this.motdepasse, 10);
+//   }
+//   next();
+// });
 
 module.exports = mongoose.model('Administrateur', AdministrateurSchema);
