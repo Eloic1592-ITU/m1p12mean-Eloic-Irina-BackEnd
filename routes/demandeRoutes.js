@@ -4,7 +4,7 @@ const router = express.Router();
 const Demande = require('../models/Demande');
 
 // Créer un Demande
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const demande = new Demande(req.body);
     await demande.save();

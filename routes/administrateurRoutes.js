@@ -5,7 +5,7 @@ const Administrateur = require('../models/Administrateur');
 const { json } = require('body-parser');
 
 // Créer un Administrateur
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const administrateur = new Administrateur(req.body);
     await administrateur.save();

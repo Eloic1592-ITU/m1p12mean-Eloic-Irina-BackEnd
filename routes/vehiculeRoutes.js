@@ -4,7 +4,7 @@ const router = express.Router();
 const Vehicule = require('../models/Vehicule');
 
 // Créer un Vehicule
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const vehicule = new Vehicule(req.body);
     await vehicule.save();

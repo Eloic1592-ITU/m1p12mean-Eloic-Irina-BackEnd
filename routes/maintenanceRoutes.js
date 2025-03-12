@@ -4,7 +4,7 @@ const router = express.Router();
 const Maintenance = require('../models/Maintenance');
 
 // Créer un Maintenance
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const maintenance = new Maintenance(req.body);
     await maintenance.save();

@@ -4,7 +4,7 @@ const router = express.Router();
 const Services = require('../models/Services');
 
 // Créer un Services
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const services = new Services(req.body);
     await services.save();

@@ -4,7 +4,7 @@ const router = express.Router();
 const Promotion = require('../models/Promotion');
 
 // Créer un Promotion
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const promotion = new Promotion(req.body);
     await promotion.save();

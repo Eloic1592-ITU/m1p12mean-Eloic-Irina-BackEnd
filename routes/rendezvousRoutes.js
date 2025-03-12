@@ -4,7 +4,7 @@ const router = express.Router();
 const Rendezvous = require('../models/Rendezvous');
 
 // Créer un Rendezvous
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const rendezvous = new Rendezvous(req.body);
     await rendezvous.save();

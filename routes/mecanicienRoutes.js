@@ -4,7 +4,7 @@ const router = express.Router();
 const Mecanicien = require('../models/Mecanicien');
 
 // Créer un Mecanicien
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const mecanicien = new Mecanicien(req.body);
     await mecanicien.save();

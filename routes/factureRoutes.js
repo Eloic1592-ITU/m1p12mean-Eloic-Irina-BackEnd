@@ -4,7 +4,7 @@ const router = express.Router();
 const Facture = require('../models/Facture');
 
 // Créer un Facture
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const facture = new Facture(req.body);
     await facture.save();
