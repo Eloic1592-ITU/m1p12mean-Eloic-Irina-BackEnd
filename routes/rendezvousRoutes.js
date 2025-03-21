@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Rendezvous = require('../models/Rendezvous');
+const { isDateAvailable, suggestAlternativeDates } = require('../utils/dateUtils');
 
 // Créer un Rendezvous
 router.post('/save', async (req, res) => {
@@ -67,38 +68,77 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
-// Trouvez tous les rendez-vous d'un client
+
+
+// Fonction utilitaire pour obtenir le début et la fin du jour
+const getDayRange = () => {
+  const aujourdHui = new Date();
+  const debutJour = new Date(aujourdHui.getFullYear(), aujourdHui.getMonth(), aujourdHui.getDate()); // Début du jour (00:00:00.000)
+  const finJour = new Date(aujourdHui.getFullYear(), aujourdHui.getMonth(), aujourdHui.getDate(), 23, 59, 59, 999); // Fin du jour (23:59:59.999)
+  return { debutJour, finJour };
+};
+
+
+// Trouver tous les rendez-vous d'un client pour la journée en cours
 router.get('/client/:clientId', async (req, res) => {
   try {
     const clientId = req.params.clientId;
-    const aujourdHui = new Date(); // Date actuelle
-    console.log(aujourdHui);
-    const debutJour = new Date(aujourdHui.getFullYear(), aujourdHui.getMonth(), aujourdHui.getDate()); // Début du jour (00:00:00.000)
-    const finJour = new Date(aujourdHui.getFullYear(), aujourdHui.getMonth(), aujourdHui.getDate(), 23, 59, 59, 999); // Fin du jour (23:59:59.999)
 
-    console.log(debutJour);
-    console.log(finJour);
 
     if (!mongoose.Types.ObjectId.isValid(clientId)) {
-      return res.status(400).json({ message: 'Invalid client ID format' });
+      return res.status(400).json({ message: 'Format d\'ID client invalide' });
     }
 
-    const rendezvous = await Rendezvous.find({ 
+    const { debutJour, finJour } = getDayRange();
+    console.log('Aujourd\'hui :', new Date());
+    console.log('Début du jour :', debutJour);
+    console.log('Fin du jour :', finJour);
+
+    const rendezvous = await Rendezvous.find({
       clientId,
       dateheure: {
-      $gte: debutJour, // Rendez-vous après le début du jour
-      $lt: finJour    // Rendez-vous avant la fin du jour
-  } }).populate('clientId');
+        $gte: debutJour, // Rendez-vous après le début du jour
+        $lt: finJour    // Rendez-vous avant la fin du jour
+      }
+    }).populate('clientId');
 
     if (!rendezvous || rendezvous.length === 0) {
-      return res.status(404).json({ message: 'Aucun  rendez vous trouve pour ce client' });
+      return res.status(404).json({ message: 'Aucun rendez-vous trouvé pour ce client aujourd\'hui' });
     }
 
-    res.json(rendezvous);
+      // Simuler une notification
+      const notification = {
+        message: `Vous avez ${rendezvous.length} rendez-vous aujourd'hui : ${rendezvous.map(rdv => rdv.service).join(', ')}`,
+        rendezvous
+      };
+      
+      res.json(notification);
+      } catch (error) {
+    console.error('Erreur lors de la récupération des rendez-vous :', error);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
+});
+
+// Route pour vérifier la disponibilité d'une date et suggérer des alternatives
+router.post('/disponibilite', async (req, res) => {
+  try {
+    const { dateheure } = req.body // La date doit être envoyée dans le corps de la requête
+    console.log(dateheure);
+    // Convertir la date en objet Date
+    const selectedDate = new Date(dateheure);
+    // Vérifier si la date est disponible
+    const isAvailable = await isDateAvailable(selectedDate);
+
+    if (isAvailable) {
+      return res.json({ available: true, message: 'La date est disponible.' });
+    } else {
+      // Suggérer des dates alternatives
+      const alternatives = await suggestAlternativeDates(selectedDate);
+      return res.json({ available: false, message: 'La date n\'est pas disponible.', alternatives });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 module.exports = router;
