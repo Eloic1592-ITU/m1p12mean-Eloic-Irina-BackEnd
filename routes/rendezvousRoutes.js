@@ -68,7 +68,7 @@ router.delete('/delete/:id', async (req, res) => {
 });
 
 // Trouvez tous les rendez-vous d'un client
-router.get('/rendezvous/client/:clientId', async (req, res) => {
+router.get('/client/:clientId', async (req, res) => {
   try {
     const clientId = req.params.clientId;
 
