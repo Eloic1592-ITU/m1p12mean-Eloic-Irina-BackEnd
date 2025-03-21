@@ -71,16 +71,27 @@ router.delete('/delete/:id', async (req, res) => {
 router.get('/client/:clientId', async (req, res) => {
   try {
     const clientId = req.params.clientId;
+    const aujourdHui = new Date(); // Date actuelle
+    console.log(aujourdHui);
+    const debutJour = new Date(aujourdHui.getFullYear(), aujourdHui.getMonth(), aujourdHui.getDate()); // Début du jour (00:00:00.000)
+    const finJour = new Date(aujourdHui.getFullYear(), aujourdHui.getMonth(), aujourdHui.getDate(), 23, 59, 59, 999); // Fin du jour (23:59:59.999)
 
+    console.log(debutJour);
+    console.log(finJour);
 
     if (!mongoose.Types.ObjectId.isValid(clientId)) {
       return res.status(400).json({ message: 'Invalid client ID format' });
     }
 
-    const rendezvous = await Rendezvous.find({ clientId }).populate('clientId');
+    const rendezvous = await Rendezvous.find({ 
+      clientId,
+      dateheure: {
+      $gte: debutJour, // Rendez-vous après le début du jour
+      $lt: finJour    // Rendez-vous avant la fin du jour
+  } }).populate('clientId');
 
     if (!rendezvous || rendezvous.length === 0) {
-      return res.status(404).json({ message: 'No rendezvous found for this client' });
+      return res.status(404).json({ message: 'Aucun  rendez vous trouve pour ce client' });
     }
 
     res.json(rendezvous);
