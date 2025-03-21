@@ -14,7 +14,7 @@ router.post('/save', async (req, res) => {
   }
 });
 
-// Lire tous les Rendezvouss
+// Lire tous les Rendezvous
 router.get('/all', async (req, res) => {
   try {
     const rendezvouss = await Rendezvous.find();
@@ -66,5 +66,28 @@ router.delete('/delete/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Trouvez tous les rendez-vous d'un client
+router.get('/rendezvous/client/:clientId', async (req, res) => {
+  try {
+    const clientId = req.params.clientId;
+
+
+    if (!mongoose.Types.ObjectId.isValid(clientId)) {
+      return res.status(400).json({ message: 'Invalid client ID format' });
+    }
+
+    const rendezvous = await Rendezvous.find({ clientId }).populate('clientId');
+
+    if (!rendezvous || rendezvous.length === 0) {
+      return res.status(404).json({ message: 'No rendezvous found for this client' });
+    }
+
+    res.json(rendezvous);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 module.exports = router;
