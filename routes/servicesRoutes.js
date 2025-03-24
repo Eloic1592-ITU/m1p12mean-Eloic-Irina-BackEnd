@@ -67,4 +67,26 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  try {
+    const { nom,categorie,duree } = req.query; 
+    const filter = {};
+    if (nom) {
+      filter.nom = { $regex: nom, $options: 'i' }; 
+    }
+    if (categorie) {
+      filter.categorie = { $regex: categorie, $options: 'i' }; 
+    }
+    if (duree) {
+      filter.duree = { $regex: duree, $options: 'i' };
+    }
+    // Rechercher les Services correspondants
+    const services = await Services.find(filter);
+
+    res.status(200).json(services);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;

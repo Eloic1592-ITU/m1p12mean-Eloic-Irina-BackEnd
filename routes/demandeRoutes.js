@@ -67,4 +67,31 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  try {
+    const { mecanicienId,type, datedebut,datefin } = req.query; 
+    const filter = {};
+    if (mecanicienId) {
+      filter.mecanicienId = { $regex: mecanicienId, $options: 'i' }; 
+    }
+    if (type) {
+      filter.type = { $regex: type, $options: 'i' }; 
+    }
+    if (datedebut) {
+      filter.datedebut = { $gte: new Date(datedebut) }; 
+
+    }
+    if (datefin) {
+      filter.datefin = { $lte: new Date(datefin) }; 
+    }
+    // Rechercher les demandes correspondants
+    const demandes = await Demande.find(filter);
+
+    res.status(200).json(demandes);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 module.exports = router;

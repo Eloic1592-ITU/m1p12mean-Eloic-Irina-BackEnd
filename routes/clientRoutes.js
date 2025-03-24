@@ -67,4 +67,28 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
+// Route pour rechercher des clients par nom
+router.get('/search', async (req, res) => {
+  try {
+    const { nom, contact,email } = req.query; 
+    const filter = {};
+    if (nom) {
+      filter.nom = { $regex: nom, $options: 'i' }; 
+    }
+    if (contact) {
+      filter.contact = { $regex: contact, $options: 'i' }; 
+    }
+    if (email) {
+      filter.email = { $regex: email, $options: 'i' }; 
+    }
+
+    // Rechercher les clients correspondants
+    const clients = await Client.find(filter);
+
+    res.status(200).json(clients);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;
