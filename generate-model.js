@@ -39,7 +39,7 @@ const router = express.Router();
 const ${modelName} = require('../models/${modelName}');
 
 // Créer un ${modelName}
-router.post('/', async (req, res) => {
+router.post('/save', async (req, res) => {
   try {
     const ${modelName.toLowerCase()} = new ${modelName}(req.body);
     await ${modelName.toLowerCase()}.save();

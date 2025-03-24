@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const VehiculeSchema = new mongoose.Schema(
   {
-    clientId: { type: String, required: true },
+    clientId: { type: mongoose.Schema.Types.ObjectId, ref: "Client", required: true },
     marque: { type: String, required: true },
     modele: { type: String, required: true },
     annee: { type: Number, required: true },
