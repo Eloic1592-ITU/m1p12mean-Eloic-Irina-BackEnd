@@ -2,11 +2,7 @@ const mongoose = require('mongoose');
 
 const FactureSchema = new mongoose.Schema(
   {
-    clientId: { type: String, required: true },
-    rendezvousId: { type: String, required: true },
-    servicesId: { type: Array, required: true },
-    promotions: { type: Array, required: true },
-    totalprix: { type: Number, required: true },
+    rendezvousId: { type: mongoose.Schema.Types.ObjectId, ref: "Rendezvous", required: true },
     statut: { type: String, required: true }
   },
   { timestamps: true }
