@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Avis = require('../models/Avis');
-const Client = require('../models/Client');
+const Avisclient = require('../models/avis_avec_clients');
 
 // Créer un Avis
 router.post('/save', async (req, res) => {
@@ -69,6 +69,47 @@ router.delete('/delete/:id', async (req, res) => {
     res.json({ message: "Avis supprimé" });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+router.get('/search', async (req, res) => {
+  try {
+    const { clientNom, date } = req.query; 
+    const filter = {};
+
+    if (clientNom) {
+      filter.clientNom = { 
+        $regex: clientNom, 
+        $options: 'i' 
+      };
+    }
+
+    if (date) {
+      const startDate = new Date(date);
+      startDate.setHours(0, 0, 0, 0);
+      
+      const endDate = new Date(date);
+      endDate.setHours(23, 59, 59, 999);
+      
+      filter.createdAt = { 
+        $gte: startDate, 
+        $lte: endDate 
+      };
+    }
+
+    // Recherche avec pagination optionnelle
+    const results = await Avisclient.find(filter)
+      .sort({ createdAt: -1 }) 
+      .limit(100);
+
+    res.json(results);
+
+  } catch (error) {
+    console.error("Erreur recherche:", error);
+    res.status(500).json({ 
+      error: "Échec de la recherche",
+      details: error.message 
+    });
   }
 });
 
