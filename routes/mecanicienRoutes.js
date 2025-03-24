@@ -67,5 +67,30 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  try {
+    const { nom, contact, email, specialite } = req.query;
+    // Créer un objet de filtrage
+    const filter = {};
+    if (nom) {
+      filter.nom = { $regex: nom, $options: 'i' }; 
+    }
+    if (contact) {
+      filter.contact = { $regex: contact, $options: 'i' }; 
+    }
+    if (email) {
+      filter.email = { $regex: email, $options: 'i' }; 
+    }
+    if (specialite) {
+      filter.specialite = { $regex: specialite, $options: 'i' }; 
+    }
 
+    // Rechercher les mécaniciens correspondants
+    const mecaniciens = await Mecanicien.find(filter);
+
+    res.status(200).json(mecaniciens);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 module.exports = router;

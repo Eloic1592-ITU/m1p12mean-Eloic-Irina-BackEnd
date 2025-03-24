@@ -141,4 +141,29 @@ router.post('/disponibilite', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  try {
+    const { clientId,dateheure } = req.query; 
+    const filter = {};
+    if(clientId){
+      filter.clientId={ $regex: clientId, $options: 'i' }; 
+    }
+    if (dateheure) {
+      const startOfDaydateheure = new Date(dateheure);
+      startOfDaydateheure.setHours(0, 0, 0, 0);
+
+      const endOfDaydateheure = new Date(dateheure);
+      endOfDaydateheure.setHours(23, 59, 59, 999); 
+
+      filter.dateheure = { $gte: startOfDaydateheure, $lte: endOfDaydateheure };
+    }
+    // Rechercher les rendezvous correspondants
+    const rendezvous = await Rendezvous.find(filter);
+
+    res.status(200).json(rendezvous);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;

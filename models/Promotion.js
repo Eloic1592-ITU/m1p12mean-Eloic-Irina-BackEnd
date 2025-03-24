@@ -9,8 +9,8 @@ const PromotionSchema = new mongoose.Schema(
     evenementId: { type: String, required: true },
     serviceId: { type: String, required: true },
     reduction: { type: Number, required: true },
-    codepromo: { type: String, required: true },
-    conditions: { type: String, required: true },
+    codepromo: { type: String, required: false },
+    conditions: { type: String, required: false },
     image: { type: String, required: true }
   },
   { timestamps: true }

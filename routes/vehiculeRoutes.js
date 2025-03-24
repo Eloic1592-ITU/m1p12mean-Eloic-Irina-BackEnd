@@ -67,4 +67,25 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  try {
+    const { Immatriculation,marque,modele } = req.query; 
+    const filter = {};
+    if(Immatriculation){
+      filter.Immatriculation={ $regex: Immatriculation, $options: 'i' }; 
+    }
+    if(marque){
+      filter.marque={ $regex: marque, $options: 'i' }; 
+    }
+    if(modele){
+      filter.modele={ $regex: modele, $options: 'i' }; 
+    }
+    // Rechercher les vehicules correspondants
+    const vehicule = await Vehicule.find(filter);
+
+    res.status(200).json(vehicule);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 module.exports = router;

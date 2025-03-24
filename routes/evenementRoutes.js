@@ -67,4 +67,27 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  try {
+    const { nom,datedebut,datefin } = req.query; 
+    const filter = {};
+    if (nom) {
+      filter.nom = { $regex: nom, $options: 'i' }; 
+    }
+    if (datedebut) {
+      filter.datedebut = { $gte: new Date(datedebut) }; 
+
+    }
+    if (datefin) {
+      filter.datefin = { $lte: new Date(datefin) }; 
+    }
+    // Rechercher les evenements correspondants
+    const evenements = await Evenement.find(filter);
+
+    res.status(200).json(evenements);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;

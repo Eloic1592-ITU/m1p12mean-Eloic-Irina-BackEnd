@@ -66,5 +66,41 @@ router.delete('/delete/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+router.get('/search', async (req, res) => {
+  try {
+    const { nom,datedebut,datefin,evenementId } = req.query; 
+    const filter = {};
+    if (nom) {
+      filter.nom = { $regex: nom, $options: 'i' }; 
+    }
+    if (datedebut) {
+      const startOfDayDatedebut = new Date(datedebut);
+      startOfDayDatedebut.setHours(0, 0, 0, 0);
+
+      const endOfDayDatedebut = new Date(datedebut);
+      endOfDayDatedebut.setHours(23, 59, 59, 999); 
+
+      filter.datedebut = { $gte: startOfDayDatedebut, $lte: endOfDayDatedebut };
+    }
+    if (datefin) {
+      const startOfDayDatefin = new Date(datefin);
+      startOfDayDatefin.setHours(0, 0, 0, 0);
+
+      const endOfDayDatefin = new Date(datefin);
+      endOfDayDatefin.setHours(23, 59, 59, 999); 
+
+      filter.datefin = { $gte: startOfDayDatefin, $lte: endOfDayDatefin };
+    }
+    if (evenementId) {
+      filter.evenementId = { $lte: new Date(evenementId) }; 
+    }
+    // Rechercher les promotions correspondants
+    const promotions = await Promotion.find(filter);
+
+    res.status(200).json(promotions);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 module.exports = router;
