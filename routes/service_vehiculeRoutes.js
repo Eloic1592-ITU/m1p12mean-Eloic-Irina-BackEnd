@@ -67,4 +67,24 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
+// Obtenir le services effectuees sur chaque vehicule
+router.get('/vehicule/services/:vehiculeId', async (req, res) => {
+  try {
+    const vehiculeId = req.params.vehiculeId;
+    const serviceVehicules = await Service_vehicule.find({vehiculeId})
+      .populate({
+        path: 'vehiculeId',
+        select: 'Immatriculation marque modele'
+      })
+      .populate({
+        path: 'serviceId',
+        select: 'nom descriptioncourte duree' 
+      });
+
+    res.status(200).json(serviceVehicules);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;
