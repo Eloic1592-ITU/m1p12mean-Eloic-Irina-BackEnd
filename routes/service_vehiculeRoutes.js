@@ -78,10 +78,40 @@ router.get('/vehicule/services/:vehiculeId', async (req, res) => {
       })
       .populate({
         path: 'serviceId',
-        select: 'nom descriptioncourte duree' 
+        select: 'nom descriptioncourte prix duree' 
       });
 
     res.status(200).json(serviceVehicules);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+
+// Obtenir le services effectuees sur chaque vehicule
+router.get('/rendezvous/services/:rendezvousId', async (req, res) => {
+  try {
+    const rendezvousId = req.params.rendezvousId;
+    const serviceVehicules = await Service_vehicule.find({rendezvousId})
+      .populate({
+        path: 'vehiculeId',
+        select: 'Immatriculation marque modele'
+      })
+      .populate({
+        path: 'serviceId',
+        select: 'nom descriptioncourte' 
+      });
+   
+    if (!serviceVehicules.length) {
+      return res.status(404).json({ message: 'Aucun service trouvé pour ce rendez-vous' });
+    }
+    const response = {
+      services: serviceVehicules,
+      count: serviceVehicules.length,
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

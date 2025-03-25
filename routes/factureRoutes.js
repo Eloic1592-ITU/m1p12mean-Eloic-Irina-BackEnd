@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Facture = require('../models/Facture');
+const Service_vehicule = require('../models/Service_vehicule');
+const{generateInvoiceData} =require('./facture/service');
 
 // Créer un Facture
 router.post('/save', async (req, res) => {
@@ -66,5 +68,33 @@ router.delete('/delete/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Obtenir le services effectuees sur chaque vehicule
+router.get('/rendezvous/services/:rendezvousId', async (req, res) => {
+  try {
+    const invoiceData = await generateInvoiceData(req.params.rendezvousId);
+    res.status(200).json(invoiceData);
+  } catch (error) {
+    if (error.message === 'Aucun service trouvé pour ce rendez-vous') {
+      return res.status(404).json({ message: error.message });
+    }
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Nouvelle route pour le PDF
+router.get('/rendezvous/facture-pdf/:rendezvousId', async (req, res) => {
+  try {
+    const invoiceData = await generateInvoiceData(req.params.rendezvousId);
+    const pdfBuffer = await generateInvoicePDF(invoiceData);
+    
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=facture_${invoiceData.rendezvousId}.pdf`);
+    res.send(pdfBuffer);
+  } catch (error) {
+    // Gestion des erreurs comme ci-dessus
+  }
+});
+
 
 module.exports = router;
