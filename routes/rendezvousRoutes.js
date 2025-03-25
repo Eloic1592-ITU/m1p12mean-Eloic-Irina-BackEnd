@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Rendezvous = require('../models/Rendezvous');
+const RendezvousClient = require('../models/rendezvous_client');
 const { isDateAvailable, suggestAlternativeDates } = require('../utils/dateUtils');
 
 // Créer un Rendezvous
@@ -143,10 +144,10 @@ router.post('/disponibilite', async (req, res) => {
 
 router.get('/search', async (req, res) => {
   try {
-    const { clientId,dateheure } = req.query; 
+    const { clientnom,dateheure } = req.query; 
     const filter = {};
-    if(clientId){
-      filter.clientId={ $regex: clientId, $options: 'i' }; 
+    if(clientnom){
+      filter.clientnom={ $regex: clientnom, $options: 'i' }; 
     }
     if (dateheure) {
       const startOfDaydateheure = new Date(dateheure);
@@ -158,9 +159,9 @@ router.get('/search', async (req, res) => {
       filter.dateheure = { $gte: startOfDaydateheure, $lte: endOfDaydateheure };
     }
     // Rechercher les rendezvous correspondants
-    const rendezvous = await Rendezvous.find(filter);
+    const rendezvousclients = await RendezvousClient.find(filter);
 
-    res.status(200).json(rendezvous);
+    res.status(200).json(rendezvousclients);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
