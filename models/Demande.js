@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const DemandeSchema = new mongoose.Schema(
   {
-    mecanicienId: { type: String, required: true },
+    mecanicienId: { type: mongoose.Schema.Types.ObjectId, ref: "Mecanicien", required: true },
     type: { type: String, required: true },
     description: { type: String, required: true },
     datedebut: { type: Date, required: true },

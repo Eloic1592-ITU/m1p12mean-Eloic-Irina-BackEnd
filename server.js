@@ -43,6 +43,8 @@ app.use('/evenement', require('./routes/evenementRoutes'));
 app.use('/promotion', require('./routes/promotionRoutes'));
 app.use('/vehicule', require('./routes/vehiculeRoutes'));
 app.use('/maintenance', require('./routes/maintenanceRoutes'));
+app.use('/servicevehicule', require('./routes/service_vehiculeRoutes'));
+app.use('/avis', require('./routes/avisRoutes'));
 app.use('/auth', require('./routes/authRoutes'));
 
 // Connexion a MongoDB
