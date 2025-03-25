@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Demande = require('../models/Demande');
-
+const DemandeMecanicien = require('../models/demande_mecaniciens');
 // Créer un Demande
 router.post('/save', async (req, res) => {
   try {
@@ -67,27 +67,39 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
+
 router.get('/search', async (req, res) => {
   try {
-    const { mecanicienId,type, datedebut,datefin } = req.query; 
+    const { type,mecaniciennom,datedebut,datefin } = req.query; 
     const filter = {};
-    if (mecanicienId) {
-      filter.mecanicienId = { $regex: mecanicienId, $options: 'i' }; 
+    if(type){
+      filter.type={ $regex: type, $options: 'i' }; 
     }
-    if (type) {
-      filter.type = { $regex: type, $options: 'i' }; 
+    if(mecaniciennom){
+      filter.mecaniciennom={ $regex: mecaniciennom, $options: 'i' }; 
     }
     if (datedebut) {
-      filter.datedebut = { $gte: new Date(datedebut) }; 
+      const startOfDaydatedebut = new Date(datedebut);
+      startOfDaydatedebut.setHours(0, 0, 0, 0);
 
+      const endOfDaydatedebut = new Date(datedebut);
+      endOfDaydatedebut.setHours(23, 59, 59, 999); 
+
+      filter.datedebut = { $gte: startOfDaydatedebut, $lte: endOfDaydatedebut };
     }
     if (datefin) {
-      filter.datefin = { $lte: new Date(datefin) }; 
-    }
-    // Rechercher les demandes correspondants
-    const demandes = await Demande.find(filter);
+      const startOfDaydatefin = new Date(datefin);
+      startOfDaydatefin.setHours(0, 0, 0, 0);
 
-    res.status(200).json(demandes);
+      const endOfDaydatefin = new Date(datefin);
+      endOfDaydatefin.setHours(23, 59, 59, 999); 
+
+      filter.datefin = { $gte: startOfDaydatefin, $lte: endOfDaydatefin };
+    }
+    // Rechercher les rendezvous correspondants
+    const demandemecaniciens = await DemandeMecanicien.find(filter);
+
+    res.status(200).json(demandemecaniciens);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
