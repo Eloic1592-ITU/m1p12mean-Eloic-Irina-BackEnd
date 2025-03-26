@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Facture = require('../models/Facture');
-const Service_vehicule = require('../models/Service_vehicule');
 const{generateInvoiceData} =require('./facture/service');
+const{generateInvoicePDF} =require('./pdf/services');
 
 // Créer un Facture
 router.post('/save', async (req, res) => {
