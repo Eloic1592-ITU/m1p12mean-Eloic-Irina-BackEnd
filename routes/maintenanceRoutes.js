@@ -23,6 +23,16 @@ router.get('/all', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+// Lire toutes les maintenances par service
+router.get('/service/maintenance/:idservice', async (req, res) => {
+  try {
+    const serviceId=req.params.idservice;
+    const maintenances = await Maintenance.find({serviceId});
+    res.json(maintenances);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Trouver un Maintenance
 router.get('/find/:id', async (req, res) => {

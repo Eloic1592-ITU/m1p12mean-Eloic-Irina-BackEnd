@@ -88,4 +88,17 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Trouver un Vehicule
+router.get('/client/:clientId', async (req, res) => {
+  try {
+    const clientId=req.params.clientId;
+    const vehicules = await Vehicule.find({clientId});
+    res.json(vehicules);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 module.exports = router;
