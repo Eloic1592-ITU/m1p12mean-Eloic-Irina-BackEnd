@@ -4,6 +4,8 @@ const RendezvousclientSchema = new mongoose.Schema(
   {
     dateheure:{ type: Date, required: true },
     description: { type: String, required: true },
+    statut:{ type: String, required: true },
+    clientId:{ type: mongoose.Schema.Types.ObjectId, ref: "Client", required: true },
     clientnom:{ type: String, required: true },
     clientimage:{ type: String, required: true },
     createdAt:{ type: Date, required: true },

@@ -10,7 +10,7 @@ require('dotenv').config();
 // Connexion
 router.post('/login', async (req, res) => {
   const { email, motdepasse, role } = req.body;
-
+  console.log(email+ motdepasse+role);
   let userModel;
   switch (role) {
     case "admin":
@@ -33,15 +33,15 @@ router.post('/login', async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
     const token = generateToken(user._id, role);
-    console.log("JWT_SECRET:", process.env.JWT_SECRET);
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Active secure en prod
-      sameSite: "Strict", // Protège contre CSRF
-      maxAge: 3600000 // 1h en millisecondes
+    console.log(token);
+    res.json({ 
+      token, 
+      role,
+      user: {
+        id: user._id,
+        email: user.email,
+      }
     });
-
-    res.json({ message: "Connexion réussie", role, userId: user._id });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -167,4 +167,27 @@ router.get('/search', async (req, res) => {
   }
 });
 
+// Lire tous les Rendezvous pour chaque client
+router.get('/rendezvous/client/:clientId', async (req, res) => {
+  try {
+    const clientId = req.params.clientId; 
+    const rendezvouss = await Rendezvous.find({clientId});
+    res.json(rendezvouss);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Lire tous les Rendezvous valide et non valide
+router.get('/rendezvous/client/', async (req, res) => {
+  try {
+    const rendezvouss = await RendezvousClient.find();
+    res.json(rendezvouss);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+
 module.exports = router;
