@@ -113,4 +113,15 @@ router.get('/search', async (req, res) => {
   }
 });
 
+router.get('/avis/:servicevehiculeId', async (req, res) => {
+    try {
+      const servicevehiculeId=req.params.servicevehiculeId;
+      const results = await Avisclient.find({servicevehiculeId});
+      res.json(results);
+  
+    } catch (error) {
+      console.error("Erreur recherche:", error);
+    }
+});
+
 module.exports = router;

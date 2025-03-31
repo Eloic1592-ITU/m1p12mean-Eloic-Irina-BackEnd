@@ -7,6 +7,7 @@ const DemandeMecaniciensSchema = new mongoose.Schema(
     datedebut:{ type: Date, required: true },
     datefin:{ type: Date, required: true },
     description: { type: String, required: true },
+    mecanicienId: { type: mongoose.Schema.Types.ObjectId, ref: "Mecanicien", required: true },
     mecaniciennom:{ type: String, required: true },
     mecanicienimage:{ type: String, required: true },
     statut:{ type: String, required: true },
