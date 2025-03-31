@@ -11,4 +11,4 @@ const AvisSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('AvisAvecClient', AvisSchema);
+module.exports = mongoose.model('Avis', AvisSchema);

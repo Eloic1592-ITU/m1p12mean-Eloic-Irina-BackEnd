@@ -7,7 +7,6 @@ const ServicesSchema = new mongoose.Schema(
     descriptioncomplete: { type: String, required: true },
     prix: { type: Number, required: true },
     duree: { type: String, required: true },
-    promotion: { type: Array, required: true },
     categorie: { type: String, required: true },
     image: { type: String, required: true }
   },

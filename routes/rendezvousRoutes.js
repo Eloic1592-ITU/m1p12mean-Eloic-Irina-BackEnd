@@ -188,6 +188,16 @@ router.get('/rendezvous/client/', async (req, res) => {
   }
 });
 
+// Lire tous les Rendezvous valide et non valide
+router.get('/rendezvous/valide', async (req, res) => {
+  try {
+    // Trouver tous les rendez-vous clients avec statut "Validé"
+    const rendezvouss = await RendezvousClient.find({ statut: 'Validé' });
+    res.json(rendezvouss);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 
 module.exports = router;

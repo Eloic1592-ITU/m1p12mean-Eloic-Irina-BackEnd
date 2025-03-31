@@ -100,17 +100,56 @@ router.get('/rendezvous/services/:rendezvousId', async (req, res) => {
       })
       .populate({
         path: 'serviceId',
-        select: 'nom descriptioncourte' 
+        select: 'nom descriptioncourte prix' 
       });
    
     if (!serviceVehicules.length) {
       return res.status(404).json({ message: 'Aucun service trouvé pour ce rendez-vous' });
     }
+    // Somme total des services 
+    const totalPrice = serviceVehicules.reduce((sum, service) => {
+      return sum + service.serviceId.prix;
+    }, 0);
+
     const response = {
       services: serviceVehicules,
       count: serviceVehicules.length,
+      totalPrice: Number(totalPrice.toFixed(2))
     };
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
+
+// Obtenir le services effectuees pour un vehicule
+router.get('/rendezvous/services/vehicule/:vehiculeId', async (req, res) => {
+  try {
+    const vehiculeId = req.params.vehiculeId;
+    const serviceVehicules = await Service_vehicule.find({vehiculeId})
+      .populate({
+        path: 'vehiculeId',
+        select: 'Immatriculation marque modele'
+      })
+      .populate({
+        path: 'serviceId',
+        select: 'nom descriptioncourte prix' 
+      });
+   
+    if (!serviceVehicules.length) {
+      return res.status(404).json({ message: 'Aucun service trouvé pour ce rendez-vous' });
+    }
+    // Somme total des services 
+    const totalPrice = serviceVehicules.reduce((sum, service) => {
+      return sum + service.serviceId.prix;
+    }, 0);
+
+    const response = {
+      services: serviceVehicules,
+      count: serviceVehicules.length,
+      totalPrice: Number(totalPrice.toFixed(2))
+    };
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
