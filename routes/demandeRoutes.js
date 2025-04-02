@@ -108,7 +108,7 @@ router.get('/search', async (req, res) => {
 // Lire tous les Rendezvous valide et non valide
 router.get('/demande/mecanicien', async (req, res) => {
   try {
-    const demandes = await DemandeMecanicien.find();
+    const demandes = await DemandeMecanicien.find().sort({createdAt: -1});
     res.json(demandes);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -119,7 +119,7 @@ router.get('/demande/mecanicien', async (req, res) => {
 router.get('/demande/mecanicien/:mecanicienId', async (req, res) => {
   try {
     const mecanicienId=req.params.mecanicienId;
-    const demandes = await DemandeMecanicien.find({mecanicienId});
+    const demandes = await DemandeMecanicien.find({mecanicienId}).sort({createdAt: -1});
     res.json(demandes);
   } catch (error) {
     res.status(500).json({ message: error.message });

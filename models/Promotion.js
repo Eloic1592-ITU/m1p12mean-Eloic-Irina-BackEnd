@@ -11,7 +11,8 @@ const PromotionSchema = new mongoose.Schema(
     reduction: { type: Number, required: true },
     codepromo: { type: String, required: false },
     conditions: { type: String, required: false },
-    image: { type: String, required: true }
+    image: { type: String, default: 'assets/img/nopicture.png' }
+
   },
   { timestamps: true }
 );

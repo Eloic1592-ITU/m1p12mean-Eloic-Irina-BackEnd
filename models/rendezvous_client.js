@@ -7,7 +7,7 @@ const RendezvousclientSchema = new mongoose.Schema(
     statut:{ type: String, required: true },
     clientId:{ type: mongoose.Schema.Types.ObjectId, ref: "Client", required: true },
     clientnom:{ type: String, required: true },
-    clientimage:{ type: String, required: true },
+    clientimage:{ type: String, default: 'assets/img/defaultavatar.png' },
     createdAt:{ type: Date, required: true },
     updatedAt:{ type: Date, required: true }
 

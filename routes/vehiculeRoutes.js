@@ -93,7 +93,7 @@ router.get('/search', async (req, res) => {
 router.get('/client/:clientId', async (req, res) => {
   try {
     const clientId=req.params.clientId;
-    const vehicules = await Vehicule.find({clientId});
+    const vehicules = await Vehicule.find({clientId}).sort({createdAt: -1});
     res.json(vehicules);
   } catch (error) {
     res.status(500).json({ message: error.message });

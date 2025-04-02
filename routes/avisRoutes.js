@@ -116,7 +116,7 @@ router.get('/search', async (req, res) => {
 router.get('/avis/:servicevehiculeId', async (req, res) => {
     try {
       const servicevehiculeId=req.params.servicevehiculeId;
-      const results = await Avisclient.find({servicevehiculeId});
+      const results = await Avisclient.find({servicevehiculeId}).sort({createdAt:-1});
       res.json(results);
   
     } catch (error) {

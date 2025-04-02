@@ -17,7 +17,7 @@ router.post('/save', async (req, res) => {
 // Lire tous les Evenements
 router.get('/all', async (req, res) => {
   try {
-    const evenements = await Evenement.find();
+    const evenements = await Evenement.find().sort({ createdAt: -1 });
     res.json(evenements);
   } catch (error) {
     res.status(500).json({ message: error.message });

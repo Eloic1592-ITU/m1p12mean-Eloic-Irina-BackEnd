@@ -6,8 +6,8 @@ const EvenementSchema = new mongoose.Schema(
     description: { type: String, required: true },
     datedebut: { type: Date, required: true },
     datefin: { type: Date, required: true },
-    image: { type: String, required: true }
-  },
+    image: { type: String, default: 'assets/img/nopicture.png' }
+   },
   { timestamps: true }
 );
 
