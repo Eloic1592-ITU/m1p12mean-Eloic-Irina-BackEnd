@@ -79,8 +79,8 @@ router.get('/vehicule/services/:vehiculeId', async (req, res) => {
       .populate({
         path: 'serviceId',
         select: 'nom descriptioncourte prix duree' 
-      });
-
+      })
+      .sort({ createdAt: -1,updatedAt: -1 });
     res.status(200).json(serviceVehicules);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -101,7 +101,7 @@ router.get('/rendezvous/services/:rendezvousId', async (req, res) => {
       .populate({
         path: 'serviceId',
         select: 'nom descriptioncourte prix' 
-      });
+      }).sort({ createdAt: -1,updatedAt: -1 });
    
     if (!serviceVehicules.length) {
       return res.status(404).json({ message: 'Aucun service trouvé pour ce rendez-vous' });

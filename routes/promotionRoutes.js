@@ -28,7 +28,7 @@ router.get('/all', async (req, res) => {
 router.get('/evenement/promotions/:idevenement', async (req, res) => {
   try {
     const evenementId=req.params.idevenement;
-    const promotions = await Promotion.find({evenementId});
+    const promotions = await Promotion.find({evenementId}).sort({ createdAt: -1 });
     res.json(promotions);
   } catch (error) {
     res.status(500).json({ message: error.message });

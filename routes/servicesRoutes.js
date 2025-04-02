@@ -17,7 +17,7 @@ router.post('/save', async (req, res) => {
 // Lire tous les Servicess
 router.get('/all', async (req, res) => {
   try {
-    const servicess = await Services.find();
+    const servicess = await Services.find().sort({ createdAt: -1 });
     res.json(servicess);
   } catch (error) {
     res.status(500).json({ message: error.message });

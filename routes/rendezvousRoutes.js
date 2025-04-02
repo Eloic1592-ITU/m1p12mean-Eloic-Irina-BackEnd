@@ -171,7 +171,7 @@ router.get('/search', async (req, res) => {
 router.get('/rendezvous/client/:clientId', async (req, res) => {
   try {
     const clientId = req.params.clientId; 
-    const rendezvouss = await Rendezvous.find({clientId});
+    const rendezvouss = await Rendezvous.find({clientId}).sort({ createdAt: -1 });
     res.json(rendezvouss);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -179,9 +179,9 @@ router.get('/rendezvous/client/:clientId', async (req, res) => {
 });
 
 // Lire tous les Rendezvous valide et non valide
-router.get('/rendezvous/client/', async (req, res) => {
+router.get('/rendezvous/client', async (req, res) => {
   try {
-    const rendezvouss = await RendezvousClient.find();
+    const rendezvouss = await RendezvousClient.find().sort({ createdAt: -1 });
     res.json(rendezvouss);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -192,7 +192,7 @@ router.get('/rendezvous/client/', async (req, res) => {
 router.get('/rendezvous/valide', async (req, res) => {
   try {
     // Trouver tous les rendez-vous clients avec statut "Validé"
-    const rendezvouss = await RendezvousClient.find({ statut: 'Validé' });
+    const rendezvouss = await RendezvousClient.find({ statut: 'Validé' }).sort({ createdAt: -1,updatedAt:-1  });
     res.json(rendezvouss);
   } catch (error) {
     res.status(500).json({ message: error.message });

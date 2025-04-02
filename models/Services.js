@@ -8,7 +8,7 @@ const ServicesSchema = new mongoose.Schema(
     prix: { type: Number, required: true },
     duree: { type: String, required: true },
     categorie: { type: String, required: true },
-    image: { type: String, required: true }
+    image: { type: String, default: 'assets/img/nopicture.png' }
   },
   { timestamps: true }
 );

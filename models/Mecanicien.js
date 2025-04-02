@@ -10,7 +10,7 @@ const MecanicienSchema = new mongoose.Schema(
     email: { type: String, required: true },
     motdepasse: { type: String, required: true },
     specialite: { type: String, required: true },
-    image: { type: String, required: true }
+    image: { type: String, default: 'assets/img/defaultavatar.png' }
   },
   { timestamps: true }
 );

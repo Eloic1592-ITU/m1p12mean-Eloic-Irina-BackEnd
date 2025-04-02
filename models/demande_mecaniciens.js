@@ -9,7 +9,7 @@ const DemandeMecaniciensSchema = new mongoose.Schema(
     description: { type: String, required: true },
     mecanicienId: { type: mongoose.Schema.Types.ObjectId, ref: "Mecanicien", required: true },
     mecaniciennom:{ type: String, required: true },
-    mecanicienimage:{ type: String, required: true },
+    mecanicienimage:{ type: String, default: 'assets/img/defaultavatar.png' },
     statut:{ type: String, required: true },
     createdAt:{ type: Date, required: true },
     updatedAt:{ type: Date, required: true }
