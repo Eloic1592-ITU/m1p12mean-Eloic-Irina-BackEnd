@@ -108,15 +108,12 @@ doc.font('Helvetica')
       doc.font('Helvetica-Bold')
          .text('Total HT:', marginLeft + 300, totalsY, { width: 100, align: 'right' })
          .text(`${invoiceData.totals?.initial || 0} Ar`, marginLeft + 400, totalsY, { align: 'right' })
-         
-         .text('TVA (20%):', marginLeft + 300, totalsY + 20, { width: 100, align: 'right' })
-         .text(`${invoiceData.totals?.initial || 0} Ar`, marginLeft + 400, totalsY + 20, { align: 'right' })
 
-         .text('Reduction:', marginLeft + 300, totalsY + 30, { width: 100, align: 'right' })
-         .text(`${invoiceData.totals?.reduction || 0} Ar`, marginLeft + 400, totalsY + 20, { align: 'right' })
+         .text('Reduction:', marginLeft + 300, totalsY + 50, { width: 100, align: 'right' })
+         .text(`${invoiceData.totals?.reduction || 0} Ar`, marginLeft + 400, totalsY + 50, { align: 'right' })
          
-         .text('Total TTC:', marginLeft + 300, totalsY + 40, { width: 100, align: 'right' })
-         .text(`${invoiceData.totals?.final || 0} Ar`, marginLeft + 400, totalsY + 40, { align: 'right' });
+         .text('Total TTC:', marginLeft + 300, totalsY + 70, { width: 100, align: 'right' })
+         .text(`${invoiceData.totals?.final || 0} Ar`, marginLeft + 400, totalsY + 70, { align: 'right' });
 
       doc.end();
     } catch (err) {
