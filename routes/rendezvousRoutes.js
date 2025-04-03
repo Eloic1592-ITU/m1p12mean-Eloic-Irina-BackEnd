@@ -4,6 +4,7 @@ const router = express.Router();
 const Rendezvous = require('../models/Rendezvous');
 const RendezvousClient = require('../models/rendezvous_client');
 const { isDateAvailable, suggestAlternativeDates } = require('../utils/dateUtils');
+const{getRendezvousStats} =require('./rendezvous/service');
 
 // Créer un Rendezvous
 router.post('/save', async (req, res) => {
@@ -199,5 +200,16 @@ router.get('/rendezvous/valide', async (req, res) => {
   }
 });
 
+
+// Statistique de rendezvous
+router.get('/stats', async (req, res) => {
+  try {
+    const stats = await getRendezvousStats();
+    res.json(stats);
+  } catch (error) {
+    console.error('Erreur:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
