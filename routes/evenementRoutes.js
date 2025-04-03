@@ -2,15 +2,29 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Evenement = require('../models/Evenement');
+const upload= require('../middleware/upload');
 
 // Créer un Evenement
-router.post('/save', async (req, res) => {
-  try {
-    const evenement = new Evenement(req.body);
+router.post('/save',upload.single('image'), async (req, res) => {
+    try {
+    const { nom, description, datedebut, datefin, image } = req.body;
+    // Sauvegarde en base de données
+    const evenement = new Evenement({
+      nom,
+      description,
+      datedebut,
+      datefin,
+      image: image || undefined 
+    });
+
     await evenement.save();
     res.status(201).json(evenement);
+
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Erreur serveur:', error);
+    res.status(500).json({ 
+      message: error.message || 'Erreur lors de la création du evenement' 
+    });
   }
 });
 
@@ -48,12 +62,27 @@ router.get('/find/:id', async (req, res) => {
 
 
 // Mettre à jour un Evenement
-router.put('/update/:id', async (req, res) => {
-  try {
-    const evenement = await Evenement.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(evenement);
+router.put('/update/:id',upload.single('image'), async (req, res) => {
+try {
+    const { imageBase64, ...updateData } = req.body;
+    // Si nouvelle image est fournie
+    if (imageBase64) {
+      updateData.imageBase64 = imageBase64 ;
+    }
+    
+    const updateEvenement = await Evenement.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true } 
+    );
+
+    if (!updateEvenement) {
+      return res.status(404).json({ message: 'Evenement non trouvé' });
+    }
+
+    res.json(updateEvenement);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 

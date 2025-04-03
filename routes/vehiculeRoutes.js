@@ -2,15 +2,32 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Vehicule = require('../models/Vehicule');
+const upload= require('../middleware/upload');
 
 // Créer un Vehicule
-router.post('/save', async (req, res) => {
+// 2. Route unique gérant les 2 méthodes (FormData ET Base64)
+router.post('/save', upload.single('image'), async (req, res) => {
   try {
-    const vehicule = new Vehicule(req.body);
+    const { marque, modele, annee, Immatriculation, kilometrage, clientId, image } = req.body;
+    // Sauvegarde en base de données
+    const vehicule = new Vehicule({
+      marque,
+      modele,
+      annee,
+      Immatriculation,
+      kilometrage,
+      clientId,
+      image: image || undefined 
+    });
+
     await vehicule.save();
     res.status(201).json(vehicule);
+
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Erreur serveur:', error);
+    res.status(500).json({ 
+      message: error.message || 'Erreur lors de la création du véhicule' 
+    });
   }
 });
 
@@ -48,14 +65,31 @@ router.get('/find/:id', async (req, res) => {
 
 
 // Mettre à jour un Vehicule
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id',upload.single('image'), async (req, res) => {
   try {
-    const vehicule = await Vehicule.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(vehicule);
+    const { imageBase64, ...updateData } = req.body;
+
+    // Si nouvelle image est fournie
+    if (imageBase64) {
+      updateData.imageBase64 = imageBase64;
+    }
+
+    const updatedVehicule = await Vehicule.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true } 
+    );
+
+    if (!updatedVehicule) {
+      return res.status(404).json({ message: 'Véhicule non trouvé' });
+    }
+
+    res.json(updatedVehicule);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
+
 
 // Supprimer un Vehicule
 router.delete('/delete/:id', async (req, res) => {
