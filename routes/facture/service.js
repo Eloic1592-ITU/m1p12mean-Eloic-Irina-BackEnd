@@ -7,11 +7,11 @@ async function generateInvoiceData(rendezvousId) {
   const serviceVehicules = await Service_vehicule.find({ rendezvousId })
     .populate({
       path: 'vehiculeId',
-      select: 'Immatriculation'
+      select: 'Immatriculation marque modele '
     })
     .populate({
       path: 'serviceId', 
-      select: 'nom prix'
+      select: 'nom prix descriptioncourte'
     });
 
   if (!serviceVehicules.length) {
