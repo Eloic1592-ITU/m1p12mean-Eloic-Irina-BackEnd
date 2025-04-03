@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Client = require('../models/Client');
+const {calculateClientRetention} =require('./client/service');
 
 // Créer un Client
 router.post('/save', async (req, res) => {
@@ -88,6 +89,22 @@ router.get('/search', async (req, res) => {
     res.status(200).json(clients);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+router.get('/client-retention', async (req, res) => {
+  try {
+    const rentention = await calculateClientRetention();
+    res.json({
+      success: true,
+      data: rentention,
+      message: "Chiffre d'affaires hebdomadaire récupéré avec succès"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 });
 

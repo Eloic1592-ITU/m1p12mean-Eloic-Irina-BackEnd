@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Services = require('../models/Services');
 const upload= require('../middleware/upload');
+const {getPopularServicesStats,getWeeklyRevenue,getInterventionStats}=require('./service/service');
 
 // Créer un Services
 router.post('/save', upload.single('image'), async (req, res) => {
@@ -119,5 +120,69 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+router.get('/services/popular', async (req, res) => {
+  try {
+    const stats = await getPopularServicesStats();
+    res.json({
+      success: true,
+      data: stats,
+      message: "Statistiques des services populaires récupérées avec succès"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Erreur lors de la récupération des statistiques"
+    });
+  }
+});
+
+router.get('/revenue/weekly', async (req, res) => {
+  try {
+    const revenueData = await getWeeklyRevenue();
+    res.json({
+      success: true,
+      data: revenueData,
+      message: "Chiffre d'affaires hebdomadaire récupéré avec succès"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
+
+router.get('/intervention-stats', async (req, res) => {
+  try {
+    const result = await getInterventionStats();
+    
+    if (!result.success) {
+      return res.status(500).json(result);
+    }
+
+    res.json({
+      success: true,
+      total: result.data.totalInterventions,
+      completed: result.data.finishedInterventions,
+      inProgress: result.data.inProgressInterventions,
+      completionRate: `${result.data.completionPercentage}%`,
+      averageDuration: result.data.durationStats 
+        ? `${result.data.durationStats.avgDuration.toFixed(2)} heures` 
+        : "N/A",
+      statusBreakdown: result.data.statusDistribution,
+      message: "Statistiques des interventions récupérées avec succès"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erreur serveur",
+      error: error.message
+    });
+  }
+});
+
 
 module.exports = router;
