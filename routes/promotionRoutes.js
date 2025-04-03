@@ -2,15 +2,34 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Promotion = require('../models/Promotion');
+const upload= require('../middleware/upload');
 
 // Créer un Promotion
-router.post('/save', async (req, res) => {
-  try {
-    const promotion = new Promotion(req.body);
+router.post('/save',upload.single('image'), async (req, res) => {
+    try {
+    const { nom, description, datedebut, datefin,evenementId,serviceId,reduction,codepromo,conditions, image } = req.body;
+    // Sauvegarde en base de données
+    const promotion = new Promotion({
+      nom,
+      description,
+      datedebut,
+      datefin,
+      evenementId,
+      serviceId,
+      reduction,
+      codepromo,
+      conditions,
+      image: image || undefined 
+    });
+
     await promotion.save();
     res.status(201).json(promotion);
+
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Erreur serveur:', error);
+    res.status(500).json({ 
+      message: error.message || 'Erreur lors de la création du promotion' 
+    });
   }
 });
 
@@ -60,12 +79,27 @@ router.get('/find/:id', async (req, res) => {
 
 
 // Mettre à jour un Promotion
-router.put('/update/:id', async (req, res) => {
-  try {
-    const promotion = await Promotion.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(promotion);
+router.put('/update/:id',upload.single('image'), async (req, res) => {
+try {
+    const { imageBase64, ...updateData } = req.body;
+    // Si nouvelle image est fournie
+    if (imageBase64) {
+      updateData.imageBase64 = imageBase64 ;
+    }
+    
+    const updatePromotion = await Promotion.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true } 
+    );
+
+    if (!updatePromotion) {
+      return res.status(404).json({ message: 'Promotion non trouvé' });
+    }
+
+    res.json(updatePromotion);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -80,7 +114,7 @@ router.delete('/delete/:id', async (req, res) => {
 });
 router.get('/search', async (req, res) => {
   try {
-    const { nom,datedebut,datefin,evenementId } = req.query; 
+    const { nom,datedebut,datefin,promotionId } = req.query; 
     const filter = {};
     if (nom) {
       filter.nom = { $regex: nom, $options: 'i' }; 
@@ -103,8 +137,8 @@ router.get('/search', async (req, res) => {
 
       filter.datefin = { $gte: startOfDayDatefin, $lte: endOfDayDatefin };
     }
-    if (evenementId) {
-      filter.evenementId = { $lte: new Date(evenementId) }; 
+    if (promotionId) {
+      filter.promotionId = { $lte: new Date(promotionId) }; 
     }
     // Rechercher les promotions correspondants
     const promotions = await Promotion.find(filter);

@@ -8,7 +8,7 @@ const VehiculeSchema = new mongoose.Schema(
     annee: { type: Number, required: true },
     Immatriculation: { type: String, required: true },
     kilometrage: { type: String, required: true },
-    image: { type: String, default: 'assets/img/defaultcar.png' }  
+    image: { type: String, default: 'assets/img/defaultcar.jpeg' }  
 
   },
   { timestamps: true }
