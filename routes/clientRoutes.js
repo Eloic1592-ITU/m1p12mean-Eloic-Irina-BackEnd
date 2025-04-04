@@ -6,13 +6,27 @@ const {calculateClientRetention} =require('./client/service');
 const upload= require('../middleware/upload');
 
 // Créer un Client
-router.post('/save', async (req, res) => {
-  try {
-    const client = new Client(req.body);
+router.post('/save',upload.single('image'), async (req, res) => {
+ try {
+    const { nom, datenaissance, contact, email, motdepasse, image } = req.body;
+    // Sauvegarde en base de données
+    const client = new Client({
+      nom, 
+      datenaissance, 
+      contact, 
+      email,
+      motdepasse,
+      image: image || undefined 
+    });
+
     await client.save();
     res.status(201).json(client);
+
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Erreur serveur:', error);
+    res.status(500).json({ 
+      message: error.message || 'Erreur lors de la création du véhicule' 
+    });
   }
 });
 
