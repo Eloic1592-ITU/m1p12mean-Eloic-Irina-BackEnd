@@ -124,14 +124,23 @@ router.get('/client/:clientId', async (req, res) => {
 // Route pour vérifier la disponibilité d'une date et suggérer des alternatives
 router.post('/disponibilite', async (req, res) => {
   try {
-    const { dateheure } = req.body // La date doit être envoyée dans le corps de la requête
+    const { clientId,dateheure,description,statut } = req.body // La date doit être envoyée dans le corps de la requête
     console.log(dateheure);
     // Convertir la date en objet Date
     const selectedDate = new Date(dateheure);
+    console.log(selectedDate);
+
     // Vérifier si la date est disponible
     const isAvailable = await isDateAvailable(selectedDate);
 
     if (isAvailable) {
+      const rendezvous = new Rendezvous({
+        dateheure: selectedDate,
+        clientId,
+        description,
+        statut,
+      });
+      await rendezvous.save(rendezvous);
       return res.json({ available: true, message: 'La date est disponible.' });
     } else {
       // Suggérer des dates alternatives
