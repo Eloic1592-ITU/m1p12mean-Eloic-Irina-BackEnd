@@ -15,7 +15,7 @@ router.post('/save', async (req, res) => {
   }
 });
 
-// Lire tous les Aviss
+// Lire tous les Avis
 router.get('/all', async (req, res) => {
   try {
     const avis = await Avis.find()

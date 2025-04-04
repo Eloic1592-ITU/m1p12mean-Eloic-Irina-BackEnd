@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Client = require('../models/Client');
 const {calculateClientRetention} =require('./client/service');
+const upload= require('../middleware/upload');
 
 // Créer un Client
 router.post('/save', async (req, res) => {
@@ -49,12 +50,27 @@ router.get('/find/:id', async (req, res) => {
 
 
 // Mettre à jour un Client
-router.put('/update/:id', async (req, res) => {
-  try {
-    const client = await Client.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(client);
+router.put('/update/:id',upload.single('image'), async (req, res) => {
+    const { imageBase64, ...updateData } = req.body;
+    try {
+    // Si nouvelle image est fournie
+    if (imageBase64) {
+      updateData.imageBase64 = imageBase64;
+    }
+
+    const updateClient = await Client.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true } 
+    );
+
+    if (!updateClient) {
+      return res.status(404).json({ message: 'Client non trouvé' });
+    }
+
+    res.json(updateClient);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
